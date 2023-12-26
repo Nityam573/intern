@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
+import { ShoppingCart } from './components/shoppingcart';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { PictureContainer } from './components/PictureContainer';
+import { Navbar } from './components/Navbar';
 
 const pictures = [
   { id: 1, name: 'Picture 1', price: 10.00 },
   { id: 2, name: 'Picture 2', price: 15.00 },
   { id: 3, name: 'Picture 3', price: 20.00 },
+  { id: 4, name: 'Picture 4', price: 30.00 },
+  { id: 5, name: 'Picture 5', price: 25.00 },
   // Add more pictures as needed
 ];
-
-const Picture = ({ picture, onBuy }) => (
-  <div className="picture">
-    <img src={`path/to/${picture.name}.jpg`} alt={picture.name} width="150" />
-    <p>{picture.name}</p>
-    <p>${picture.price.toFixed(2)}</p>
-    <button className="buy-button" onClick={() => onBuy(picture)}>Buy</button>
-  </div>
-);
-
-const ShoppingCartItem = ({ item }) => (
-  <div className="cart-item">
-    <p>{item.name} - ${item.price.toFixed(2)}</p>
-  </div>
-);
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -46,20 +37,15 @@ const App = () => {
 
   return (
     <div>
-      <div className="picture-container">
-        {displayedPictures.map((picture) => (
-          <Picture key={picture.id} picture={picture} onBuy={addToCart} />
-        ))}
-      </div>
-
-      <div className="shopping-cart">
-        <h2>Shopping Cart</h2>
-        {cartItems.map((item, index) => (
-          <ShoppingCartItem key={index} item={item} />
-        ))}
-        <p>Total: ${totalPrice.toFixed(2)}</p>
-        <button className="pay-button" onClick={pay}>Pay</button>
-      </div>
+      <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<PictureContainer displayedPictures={displayedPictures} onBuy={addToCart} />} />
+            <Route path="/cart" element={<ShoppingCart cartItems={cartItems} totalPrice={totalPrice} onPay={pay} />} />
+          </Routes>
+        </Router>
+      
+      
     </div>
   );
 };
