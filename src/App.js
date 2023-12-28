@@ -4,13 +4,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { PictureContainer } from "./components/PictureContainer";
 import { Navbar } from "./components/Navbar";
 import Web3 from 'web3';
+const { ethereum } = window;
 
 const pictures = [
-  { id: 1, name: "Picture 1", price: 10.0, eth: 0.01 },
-  { id: 2, name: "Picture 2", price: 15.0, eth: 0.01 },
-  { id: 3, name: "Picture 3", price: 20.0, eth: 0.01 },
-  { id: 4, name: "Picture 4", price: 30.0, eth: 0.01 },
-  { id: 5, name: "Picture 5", price: 25.0, eth: 0.01 },
+  { id: 1, name: "Picture 1", price: 10.0, eth: 0.0001 },
+  { id: 2, name: "Picture 2", price: 15.0, eth: 0.0001 },
+  { id: 3, name: "Picture 3", price: 20.0, eth: 0.0001 },
+  { id: 4, name: "Picture 4", price: 30.0, eth: 0.0001 },
+  { id: 5, name: "Picture 5", price: 25.0, eth: 0.0001 },
   // Add more pictures as needed
 ];
 
@@ -32,9 +33,10 @@ const App = () => {
           const web3Instance = new Web3(window.ethereum);
           setWeb3(web3Instance);
 
-          const accounts = await web3Instance.eth.getAccounts();
+          // const accounts = await web3Instance.eth.getAccounts();
+          
+          const accounts = await ethereum.request({ method: "eth_requestAccounts", });
           setAccount(accounts[0]);
-
           const contractAddress = "0x558A481f0794E7B9b367e5943b0f86e02e526cba";
           const contractABI = [
             {
@@ -149,6 +151,7 @@ const App = () => {
       const result = await contract.methods.pay().send({
         from: account,
         value: amountInWei,
+        gas:100000
       });
 
       console.log('Transaction successful:', result);
